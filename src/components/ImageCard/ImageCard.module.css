@@ -1,0 +1,16 @@
+.img {
+  /* max-height: 240px; */
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.bold {
+  font-weight: bold;
+  text-transform: capitalize;
+}
