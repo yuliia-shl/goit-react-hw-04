@@ -1,45 +1,76 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
 import './App.css';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import { fetchImg } from '../services/api';
 import Loader from './Loader/Loader';
+import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
+import toast from 'react-hot-toast';
 
 function App() {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
+    if (!query) {
+      return;
+    }
+
     const getData = async () => {
       try {
-        // 1. Встановлюємо індикатор loading в true перед запитом
-        setIsLoading(true);
-        setIsError(false);
-        const { results } = await fetchImg();
-        // console.log(response);
-        setImages(results);
-        console.log(results);
+        setIsLoading(true); // 1. Встановлюємо індикатор loading в true перед запитом
+        setIsError(false); // Виключаємо показ помилки
+
+        // Отримуємо результати запиту
+        const { results, total_pages } = await fetchImg(query, page);
+        setTotalPages(total_pages);
+
+        // Записуємо результат запиту (масив) у стан зображень
+        setImages(prev => [...prev, ...results]);
       } catch (error) {
         console.error(error);
+        // Включаємо показ помилки
         setIsError(true);
       } finally {
+        // Виключаємо ловдер після отримання результату запиту чи помилки
         setIsLoading(false);
       }
     };
     getData();
-  }, []);
+  }, [query, page]);
+
+  const handleChangeQuery = inputValue => {
+    setImages([]);
+    if (!inputValue.trim()) {
+      toast.error(t => (
+        <span>
+          <b>Введіть пошукове слово! </b>
+          <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
+        </span>
+      ));
+      return;
+    }
+    setQuery(inputValue);
+    setPage(1);
+  };
+
+  const handleLoadMore = () => {
+    setPage(prev => prev + 1);
+  };
 
   return (
     <>
-      <SearchBar />
+      <SearchBar onChangeQuery={handleChangeQuery} />
 
       <main>
-        <ImageGallery images={images} />
+        {images.length > 0 ? <ImageGallery images={images} /> : <p>Введіть пошуковий запит</p>}
         {isLoading && <Loader />}
         {isError && <h3>От халепа! Щось сталося. Онови Сторінку!</h3>}
+        {totalPages > page && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
       </main>
     </>
   );

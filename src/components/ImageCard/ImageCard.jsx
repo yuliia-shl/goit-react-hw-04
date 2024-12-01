@@ -1,24 +1,15 @@
 import s from './ImageCard.module.css';
 
-import React from 'react';
-
 const ImageCard = ({ image }) => {
   const {
-    urls: { small, regular },
+    urls: { small },
     alt_description,
     user,
     likes,
   } = image;
-
   return (
     <>
-      <img
-        src={small}
-        alt={alt_description}
-        className={s.img}
-        width="360px"
-        height="240px"
-      />
+      <img src={small} alt={alt_description} className={s.img} width="380px" height="260px" />
       <div className={s.info}>
         <p>
           Author: <span className={s.bold}>{user.name}</span>

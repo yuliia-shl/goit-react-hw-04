@@ -1,5 +1,4 @@
 .img {
-  /* max-height: 240px; */
   object-fit: cover;
 }
 
@@ -7,7 +6,8 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 4px;
+  background-color: #fee4e4;
 }
 
 .bold {

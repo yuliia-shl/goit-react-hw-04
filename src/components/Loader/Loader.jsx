@@ -1,6 +1,6 @@
 import { Hearts } from 'react-loader-spinner';
 
-const Loader = ({}) => {
+const Loader = () => {
   return (
     <>
       <Hearts
