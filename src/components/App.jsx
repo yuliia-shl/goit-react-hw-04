@@ -29,6 +29,14 @@ function App() {
         const { results, total_pages } = await fetchImg(query, page);
         setTotalPages(total_pages);
 
+        if (results.length === 0) {
+          toast.error(t => (
+            <span>
+              <b>Зображення не знайдені </b>
+              <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
+            </span>
+          ));
+        }
         // Записуємо результат запиту (масив) у стан зображень
         setImages(prev => [...prev, ...results]);
       } catch (error) {
@@ -46,7 +54,7 @@ function App() {
   const handleChangeQuery = inputValue => {
     setImages([]);
     if (!inputValue.trim()) {
-      toast.error(t => (
+      toast(t => (
         <span>
           <b>Введіть пошукове слово! </b>
           <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
@@ -67,10 +75,14 @@ function App() {
       <SearchBar onChangeQuery={handleChangeQuery} />
 
       <main>
-        {images.length > 0 ? <ImageGallery images={images} /> : <p>Введіть пошуковий запит</p>}
+        {images.length > 0 ? (
+          <ImageGallery images={images} />
+        ) : (
+          <p>Знайдіть зображення своєї мрії</p>
+        )}
         {isLoading && <Loader />}
         {isError && <h3>От халепа! Щось сталося. Онови Сторінку!</h3>}
-        {totalPages > page && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
+        {totalPages > page && images && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
       </main>
     </>
   );
