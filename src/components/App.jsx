@@ -54,9 +54,6 @@ function App() {
   }, [query, page]);
 
   const handleChangeQuery = inputValue => {
-    setImages([]);
-    setTotalPages(0);
-    setPage(1);
     if (!inputValue.trim()) {
       toast(t => (
         <span>
@@ -66,6 +63,10 @@ function App() {
       ));
       return;
     }
+    setImages([]);
+    setTotalPages(0);
+    setPage(1);
+
     setQuery(inputValue);
   };
 
