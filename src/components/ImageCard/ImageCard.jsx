@@ -1,6 +1,6 @@
 import s from './ImageCard.module.css';
 
-const ImageCard = ({ image }) => {
+const ImageCard = ({ image, onClick }) => {
   const {
     urls: { small },
     alt_description,
@@ -9,7 +9,14 @@ const ImageCard = ({ image }) => {
   } = image;
   return (
     <>
-      <img src={small} alt={alt_description} className={s.img} width="380px" height="260px" />
+      <img
+        src={small}
+        alt={alt_description}
+        className={s.img}
+        width="380px"
+        height="260px"
+        onClick={onClick}
+      />
       <div className={s.info}>
         <p>
           Author: <span className={s.bold}>{user.name}</span>

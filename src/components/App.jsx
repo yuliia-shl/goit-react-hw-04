@@ -6,6 +6,7 @@ import { fetchImg } from '../services/api';
 import Loader from './Loader/Loader';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import toast from 'react-hot-toast';
+import ImageModal from './ImageModal/ImageModal';
 
 function App() {
   const [images, setImages] = useState([]);
@@ -14,6 +15,7 @@ function App() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     if (!query) {
@@ -70,19 +72,32 @@ function App() {
     setPage(prev => prev + 1);
   };
 
+  const openModal = image => {
+    setSelectedImage({
+      imageUrl: image.urls.regular,
+      alt: image.alt_description,
+    });
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <>
       <SearchBar onChangeQuery={handleChangeQuery} />
 
       <main>
         {images.length > 0 ? (
-          <ImageGallery images={images} />
+          <ImageGallery images={images} onImgClick={openModal} />
         ) : (
           <p>Знайдіть зображення своєї мрії</p>
         )}
         {isLoading && <Loader />}
         {isError && <h3>От халепа! Щось сталося. Онови Сторінку!</h3>}
         {totalPages > page && images && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
+        <button onClick={openModal}>open modal</button>
+        <ImageModal isOpen={!!selectedImage} image={selectedImage} onClose={closeModal} />
       </main>
     </>
   );
