@@ -55,6 +55,8 @@ function App() {
 
   const handleChangeQuery = inputValue => {
     setImages([]);
+    setTotalPages(0);
+    setPage(1);
     if (!inputValue.trim()) {
       toast(t => (
         <span>
@@ -65,7 +67,6 @@ function App() {
       return;
     }
     setQuery(inputValue);
-    setPage(1);
   };
 
   const handleLoadMore = () => {
@@ -95,8 +96,7 @@ function App() {
         )}
         {isLoading && <Loader />}
         {isError && <h3>От халепа! Щось сталося. Онови Сторінку!</h3>}
-        {totalPages > page && images && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
-        <button onClick={openModal}>open modal</button>
+        {totalPages > page && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
         <ImageModal isOpen={!!selectedImage} image={selectedImage} onClose={closeModal} />
       </main>
     </>
